@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import SortIcon from "@mui/icons-material/Sort";
@@ -11,26 +11,7 @@ import artImage from "../assets/art.jpg";
 import { TextField, Chip, MenuItem, Select, Button } from "@mui/material";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-
-
-const totalCollections = [
-  { title: "Collection 1", count: 5, type: "Photos", image: jokerImage },
-  { title: "Collection 2", count: 5, type: "Videos", image: natureImage },
-  { title: "Collection 3", count: 5, type: "Photos", image: quotesImage },
-  { title: "Collection 4", count: 5, type: "Videos", image: newImage },
-  { title: "Collection 5", count: 5, type: "Photos", image: artImage },
-  { title: "Collection 6", count: 5, type: "Videos", image: natureImage },
-  { title: "Collection 7", count: 5, type: "Videos", image: quotesImage },
-  { title: "Collection 8", count: 5, type: "Photos", image: waterImage },
-  { title: "Collection 1", count: 5, type: "Photos", image: jokerImage },
-  { title: "Collection 2", count: 5, type: "Videos", image: natureImage },
-  { title: "Collection 3", count: 5, type: "Photos", image: quotesImage },
-  { title: "Collection 4", count: 5, type: "Videos", image: newImage },
-  { title: "Collection 5", count: 5, type: "Photos", image: artImage },
-  { title: "Collection 6", count: 5, type: "Videos", image: natureImage },
-  { title: "Collection 7", count: 5, type: "Videos", image: quotesImage },
-  { title: "Collection 8", count: 5, type: "Photos", image: waterImage },
-];
+import debounce from "lodash.debounce";
 
 const CollectionCard = ({ title, count, type, image }) => {
   return (
@@ -49,6 +30,38 @@ const CollectionCard = ({ title, count, type, image }) => {
 };
 
 export const Collections = () => {
+  const [activeTab, setActiveTab] = useState("All Files");
+  const [searchValue, setSearchValue] = useState("");
+  const [totalCollections, setTotalCollections] = useState([
+    { title: "Collection 1", count: 5, type: "Photos", image: jokerImage },
+    { title: "Collection 2", count: 5, type: "Videos", image: natureImage },
+    { title: "Collection 3", count: 5, type: "Photos", image: quotesImage },
+    { title: "Collection 4", count: 5, type: "Videos", image: newImage },
+    { title: "Collection 5", count: 5, type: "Photos", image: artImage },
+    { title: "Collection 6", count: 5, type: "Videos", image: natureImage },
+    { title: "Collection 7", count: 5, type: "Videos", image: quotesImage },
+    { title: "Collection 8", count: 5, type: "Photos", image: waterImage },
+    { title: "Collection 1", count: 5, type: "Photos", image: jokerImage },
+    { title: "Collection 2", count: 5, type: "Videos", image: natureImage },
+    { title: "Collection 3", count: 5, type: "Documents", image: quotesImage },
+    { title: "Collection 4", count: 5, type: "Videos", image: newImage },
+    { title: "Collection 5", count: 5, type: "Photos", image: artImage },
+    { title: "Collection 6", count: 5, type: "Documents", image: natureImage },
+    { title: "Collection 7", count: 5, type: "Videos", image: quotesImage },
+    { title: "Collection 8", count: 5, type: "Photos", image: waterImage },
+  ]);
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
+
+  const getSearchedData = (userInput) => {
+    deBounceDispatch(userInput.replace(/\s+/g, "").toLocaleLowerCase());
+  };
+  const deBounceDispatch = debounce((input) => {
+    setSearchValue(input);
+  }, 500);
+  console.log({ searchValue });
   return (
     <div className="collection-container">
       <div className="collection-header-section">
@@ -59,7 +72,17 @@ export const Collections = () => {
           </div>
           <div className="filter-chip">
             {["All Files", "Photos", "Videos", "Documents"].map((tab) => (
-              <Chip key={tab} label={tab} variant="outlined" />
+              <Chip
+                key={tab}
+                label={tab}
+                variant="outlined"
+                style={{
+                  backgroundColor:
+                    activeTab === tab ? "#E51058" : "transparent",
+                  color: activeTab === tab ? "white" : "black",
+                }}
+                onClick={() => handleTabChange(tab)}
+              />
             ))}
           </div>
         </div>
@@ -79,6 +102,7 @@ export const Collections = () => {
                   fontWeight: 500,
                 },
               }}
+              onChange={(e) => getSearchedData(e.target.value)}
             />
             <div className="create-new-collection">
               <Button variant="outlined" size="small">
@@ -102,9 +126,21 @@ export const Collections = () => {
       </div>
 
       <div className="collections-grid">
-        {totalCollections.map((ele, index) => (
-          <CollectionCard key={index} {...ele} />
-        ))}
+        {totalCollections
+          .filter(({ type, title }) => {
+            const normalizedTitle = title.replace(/\s+/g, "").toLowerCase();
+            const normalizedSearch = searchValue?.trim().toLowerCase();
+
+            const matchesTab = activeTab === "All Files" || activeTab === type;
+
+            const matchesSearch =
+              !normalizedSearch || normalizedTitle.includes(normalizedSearch);
+
+            return matchesTab && matchesSearch;
+          })
+          .map((ele, index) => (
+            <CollectionCard key={index} {...ele} />
+          ))}
       </div>
     </div>
   );

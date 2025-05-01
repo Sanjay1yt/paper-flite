@@ -36,6 +36,10 @@
   cursor: pointer;
 }
 
+.side-bar-icon.active-icon {
+  color: #e51058;
+}
+
 /* Collection component*/
 .collection-container {
   display: flex;

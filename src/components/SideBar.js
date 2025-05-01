@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import PermMediaOutlinedIcon from "@mui/icons-material/PermMediaOutlined";
 import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
@@ -9,38 +10,46 @@ import ModeFanOffOutlinedIcon from "@mui/icons-material/ModeFanOffOutlined";
 import AppsOutlinedIcon from "@mui/icons-material/AppsOutlined";
 
 const topIcons = [
-  { icon: <SearchOutlinedIcon /> },
-  { icon: <PermMediaOutlinedIcon /> },
-  { icon: <LayersOutlinedIcon /> },
-  { icon: <QuestionAnswerOutlinedIcon /> },
-  { icon: <SpeedOutlinedIcon /> },
-  { icon: <SendOutlinedIcon /> },
+  { icon: <SearchOutlinedIcon />, route: "/search" },
+  { icon: <PermMediaOutlinedIcon />, route: "/media" },
+  { icon: <LayersOutlinedIcon />, route: "/layers" },
+  { icon: <QuestionAnswerOutlinedIcon />, route: "/chats" },
+  { icon: <SpeedOutlinedIcon />, route: "/performance" },
+  { icon: <SendOutlinedIcon />, route: "/history" },
 ];
 const bottomIcons = [
-  { icon: <ModeFanOffOutlinedIcon /> },
-  { icon: <AppsOutlinedIcon /> },
+  { icon: <ModeFanOffOutlinedIcon />, route: "/settings" },
+  { icon: <AppsOutlinedIcon />, route: "/apps" },
 ];
 
 export const SideBar = () => {
   return (
     <div className="side-bar">
       <div className="side-bar-top">
-        {topIcons.map(({ icon }, index) =>
-          React.cloneElement(icon, {
-            key: index,
-            fontSize: "medium",
-            className: "side-bar-icon ",
-          })
-        )}
+        {topIcons.map(({ icon, route }, index) => (
+          <NavLink
+            key={index}
+            to={route}
+            className={({ isActive }) =>
+              `side-bar-icon ${isActive ? "active-icon" : ""}`
+            }
+          >
+            {React.cloneElement(icon, { fontSize: "medium" })}
+          </NavLink>
+        ))}
       </div>
       <div className="side-bar-bottom">
-        {bottomIcons.map(({ icon }, index) =>
-          React.cloneElement(icon, {
-            key: index,
-            fontSize: "medium",
-            className: "side-bar-icon",
-          })
-        )}
+        {bottomIcons.map(({ icon ,route}, index) => (
+          <NavLink
+            key={index}
+            to={route}
+            className={({ isActive }) =>
+              `side-bar-icon ${isActive ? "active-icon" : ""}`
+            }
+          >
+            {React.cloneElement(icon, { fontSize: "medium" })}
+          </NavLink>
+        ))}
       </div>
     </div>
   );
