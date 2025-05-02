@@ -1,10 +1,11 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { Collections } from "./components/Collections";
-import { SideBar } from "./components/SideBar";
+import { Collections } from "./components/Document-Collections/Collections.tsx";
+import { SideBar } from "./components/SideBar.tsx";
 import "./styles/App.css";
-import ComingSoon from "./components/ComingSoon";
+import ComingSoon from "./components/ComingSoon.tsx";
+import React from "react";
 
-function App() {
+const App: React.FC = () => {
   return (
     <div className="app-layout">
       <SideBar />
@@ -26,6 +27,6 @@ function App() {
       </div>
     </div>
   );
-}
+};
 
 export default App;

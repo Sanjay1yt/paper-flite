@@ -9,7 +9,12 @@ import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 import ModeFanOffOutlinedIcon from "@mui/icons-material/ModeFanOffOutlined";
 import AppsOutlinedIcon from "@mui/icons-material/AppsOutlined";
 
-const topIcons = [
+interface SideBarIcon {
+  icon: React.ReactElement;
+  route: string;
+}
+
+const topIcons: SideBarIcon[] = [
   { icon: <SearchOutlinedIcon />, route: "/search" },
   { icon: <PermMediaOutlinedIcon />, route: "/media" },
   { icon: <LayersOutlinedIcon />, route: "/layers" },
@@ -17,12 +22,13 @@ const topIcons = [
   { icon: <SpeedOutlinedIcon />, route: "/performance" },
   { icon: <SendOutlinedIcon />, route: "/history" },
 ];
-const bottomIcons = [
+
+const bottomIcons: SideBarIcon[] = [
   { icon: <ModeFanOffOutlinedIcon />, route: "/settings" },
   { icon: <AppsOutlinedIcon />, route: "/apps" },
 ];
 
-export const SideBar = () => {
+export const SideBar: React.FC = () => {
   return (
     <div className="side-bar">
       <div className="side-bar-top">
@@ -34,12 +40,12 @@ export const SideBar = () => {
               `side-bar-icon ${isActive ? "active-icon" : ""}`
             }
           >
-            {React.cloneElement(icon, { fontSize: "medium" })}
+            {React.cloneElement(icon)}
           </NavLink>
         ))}
       </div>
       <div className="side-bar-bottom">
-        {bottomIcons.map(({ icon ,route}, index) => (
+        {bottomIcons.map(({ icon, route }, index) => (
           <NavLink
             key={index}
             to={route}
@@ -47,7 +53,7 @@ export const SideBar = () => {
               `side-bar-icon ${isActive ? "active-icon" : ""}`
             }
           >
-            {React.cloneElement(icon, { fontSize: "medium" })}
+            {React.cloneElement(icon)}
           </NavLink>
         ))}
       </div>
